@@ -18,19 +18,12 @@ class CalendarConstants {
   static const int MODE_SHOW_ONLY_WEEK = 2; //仅支持星期视图
   static const int MODE_SHOW_WEEK_AND_MONTH = 3; //支持两种视图，先显示周视图
   static const int MODE_SHOW_MONTH_AND_WEEK = 4; //支持两种视图，先显示月视图
+  static const int MODE_SHOW_MONTH_AND_YEAR = 5; //支持两种视图，先显示月视图
 
   /**
    * 一周七天
    */
-  static const List<String> WEEK_LIST = [
-    "周一",
-    "周二",
-    "周三",
-    "周四",
-    "周五",
-    "周六",
-    "周日"
-  ];
+  static const List<String> WEEK_LIST = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
 
   /**
    * 农历的月份

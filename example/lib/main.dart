@@ -17,10 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          focusColor: Colors.teal),
+      theme: ThemeData(primarySwatch: Colors.blue, visualDensity: VisualDensity.adaptivePlatformDensity, focusColor: Colors.teal),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -50,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
         minYearMonth: 1,
         maxYear: 2021,
         maxYearMonth: 12,
-        showMode: CalendarConstants.MODE_SHOW_WEEK_AND_MONTH,
+        showMode: CalendarConstants.MODE_SHOW_MONTH_AND_YEAR,
         selectedDateTimeList: _selectedDate,
         selectMode: CalendarSelectedMode.singleSelect)
       ..addOnCalendarSelectListener((dateModel) {
@@ -72,53 +69,53 @@ class _MyHomePageState extends State<MyHomePage> {
     calendar = new CalendarViewWidget(
       key: _globalKey,
       calendarController: controller,
-      dayWidgetBuilder: (DateModel model) {
-        double wd = (MediaQuery.of(context).size.width - 20) / 7;
-        bool _isSelected = model.isSelected;
-        if (_isSelected &&
-            CalendarSelectedMode.singleSelect ==
-                controller.calendarConfiguration.selectMode) {
-          _selectDate = model.toString();
-        }
-        return ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(wd / 2)),
-          child: Container(
-            color: _isSelected ? Theme.of(context).focusColor : Colors.white,
-            alignment: Alignment.center,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  model.day.toString(),
-                  style: TextStyle(
-                      color: model.isCurrentMonth
-                          ? (_isSelected == false
-                              ? (model.isWeekend
-                                  ? Colors.black38
-                                  : Colors.black87)
-                              : Colors.white)
-                          : Colors.black38),
-                ),
-//              Text(model.lunarDay.toString()),
-              ],
-            ),
-          ),
-        );
-      },
+//       dayWidgetBuilder: (DateModel model) {
+//         double wd = (MediaQuery.of(context).size.width - 20) / 7;
+//         bool _isSelected = model.isSelected;
+//         if (_isSelected && CalendarSelectedMode.singleSelect == controller.calendarConfiguration.selectMode) {
+//           _selectDate = model.toString();
+//         }
+//         return ClipRRect(
+//           borderRadius: BorderRadius.all(Radius.circular(wd / 2)),
+//           child: Container(
+//             color: _isSelected ? Theme.of(context).focusColor : Colors.white,
+//             alignment: Alignment.center,
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: <Widget>[
+//                 Text(
+//                   model.day.toString(),
+//                   style: TextStyle(color: model.isCurrentMonth ? (_isSelected == false ? (model.isWeekend ? Colors.black38 : Colors.black87) : Colors.white) : Colors.black38),
+//                 ),
+// //              Text(model.lunarDay.toString()),
+//               ],
+//             ),
+//           ),
+//         );
+//       },
     );
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       controller.addExpandChangeListener((value) {
-        /// 添加改变 月视图和 周视图的监听
-        _isMonthSelected = value;
-        setState(() {});
+        setState(() {
+          /// 添加改变 月视图和 周视图的监听
+          if (controller.calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_MONTH_AND_YEAR) {
+            _isYearSelected = value == false; // 不展开是年
+            _isMonthSelected = value == true; // 展开是月
+            return;
+          }
+          _isMonthSelected = value == true;
+          _isWeekSelected = value == false;
+        });
       });
     });
 
     super.initState();
   }
 
-  bool _isMonthSelected = false;
+  bool _isMonthSelected = true; // 默认选中月视图
+  bool _isYearSelected = false;
+  bool _isWeekSelected = false;
 
   String _selectDate = '';
   @override
@@ -167,14 +164,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onPressed: () {
                   setState(() {
-                    controller.calendarConfiguration.selectMode =
-                        CalendarSelectedMode.singleSelect;
+                    controller.calendarConfiguration.selectMode = CalendarSelectedMode.singleSelect;
                   });
                 },
-                color: controller.calendarConfiguration.selectMode ==
-                        CalendarSelectedMode.singleSelect
-                    ? Colors.teal
-                    : Colors.black38,
+                color: controller.calendarConfiguration.selectMode == CalendarSelectedMode.singleSelect ? Colors.teal : Colors.black38,
               ),
               FlatButton(
                 child: Text(
@@ -183,14 +176,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onPressed: () {
                   setState(() {
-                    controller.calendarConfiguration.selectMode =
-                        CalendarSelectedMode.multiSelect;
+                    controller.calendarConfiguration.selectMode = CalendarSelectedMode.multiSelect;
                   });
                 },
-                color: controller.calendarConfiguration.selectMode ==
-                        CalendarSelectedMode.multiSelect
-                    ? Colors.teal
-                    : Colors.black38,
+                color: controller.calendarConfiguration.selectMode == CalendarSelectedMode.multiSelect ? Colors.teal : Colors.black38,
               ),
               FlatButton(
                 child: Text(
@@ -199,14 +188,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onPressed: () {
                   setState(() {
-                    controller.calendarConfiguration.selectMode =
-                        CalendarSelectedMode.mutltiStartToEndSelect;
+                    controller.calendarConfiguration.selectMode = CalendarSelectedMode.mutltiStartToEndSelect;
                   });
                 },
-                color: controller.calendarConfiguration.selectMode ==
-                        CalendarSelectedMode.mutltiStartToEndSelect
-                    ? Colors.teal
-                    : Colors.black38,
+                color: controller.calendarConfiguration.selectMode == CalendarSelectedMode.mutltiStartToEndSelect ? Colors.teal : Colors.black38,
               ),
             ],
           ),
@@ -233,8 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onPressed: () {
                   setState(() {
-                    controller.weekAndMonthViewChange(
-                        CalendarConstants.MODE_SHOW_ONLY_WEEK);
+                    controller.weekAndMonthViewChange(CalendarConstants.MODE_SHOW_ONLY_WEEK);
                   });
                 },
                 color: _isMonthSelected ? Colors.teal : Colors.black38,
@@ -246,11 +230,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onPressed: () {
                   setState(() {
-                    controller.weekAndMonthViewChange(
-                        CalendarConstants.MODE_SHOW_ONLY_MONTH);
+                    controller.weekAndMonthViewChange(CalendarConstants.MODE_SHOW_ONLY_MONTH);
                   });
                 },
-                color: _isMonthSelected == false ? Colors.teal : Colors.black38,
+                color: _isWeekSelected ? Colors.teal : Colors.black38,
+              ),
+              FlatButton(
+                child: Text(
+                  '年视图',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  setState(() {
+                    controller.toggleExpandStatus();
+                  });
+                },
+                color: _isYearSelected ? Colors.teal : Colors.black38,
               ),
             ],
           ),
