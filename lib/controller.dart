@@ -183,7 +183,9 @@ class CalendarController {
       this.weekController = new PageController(initialPage: initialWeekPage);
     }
 
-    this.monthController = new PageController(initialPage: 0, keepPage: true);
+    if (showMode == CalendarConstants.MODE_SHOW_MONTH_AND_YEAR) {
+      this.monthController = new PageController(initialPage: 0, keepPage: true);
+    }
 
     calendarConfiguration.monthList = monthList;
     calendarConfiguration.weekList = weekList;
