@@ -31,8 +31,10 @@ class CalendarController {
    */
   List<DateModel> monthList = new List(); //月份list
   List<DateModel> weekList = new List(); //星期list
+  List<DateModel> yearList = new List(); //年list
   PageController monthController; //月份的controller
   PageController weekController; //星期的controller
+  PageController yearController; //星期的controller
 
   CalendarController(
       {CalendarSelectedMode selectMode = CalendarSelectedMode.singleSelect,
@@ -118,8 +120,10 @@ class CalendarController {
 
     if (showMode != CalendarConstants.MODE_SHOW_ONLY_WEEK) {
       //初始化pageController,initialPage默认是当前时间对于的页面
-      int initialPage = 0;
+      int initialMonthPage = 0;
+      int initialYearPage = 0;
       int nowMonthIndex = 0;
+      int nowYearIndex = 0;
       monthList.clear();
       for (int i = minYear; i <= maxYear; i++) {
         for (int j = 1; j <= 12; j++) {
@@ -134,13 +138,23 @@ class CalendarController {
           dateModel.month = j;
 
           if (i == nowYear && j == nowMonth) {
-            initialPage = nowMonthIndex;
+            initialMonthPage = nowMonthIndex;
           }
           monthList.add(dateModel);
           nowMonthIndex++;
         }
+        DateModel dateModel = new DateModel();
+        dateModel.year = i;
+        dateModel.month = 1;
+        yearList.add(dateModel);
+
+        if (i == nowYear) {
+          initialYearPage = nowYearIndex;
+        }
+        nowYearIndex++;
       }
-      this.monthController = new PageController(initialPage: initialPage, keepPage: true);
+      this.monthController = new PageController(initialPage: initialMonthPage, keepPage: true);
+      this.yearController = new PageController(initialPage: initialYearPage, keepPage: true);
 
       LogUtil.log(TAG: this.runtimeType, message: "初始化月份视图的信息:一共有${monthList.length}个月，initialPage为$nowMonthIndex");
     }
@@ -183,14 +197,12 @@ class CalendarController {
       this.weekController = new PageController(initialPage: initialWeekPage);
     }
 
-    if (showMode == CalendarConstants.MODE_SHOW_MONTH_AND_YEAR) {
-      this.monthController = new PageController(initialPage: 0, keepPage: true);
-    }
-
     calendarConfiguration.monthList = monthList;
     calendarConfiguration.weekList = weekList;
+    calendarConfiguration.yearList = yearList;
     calendarConfiguration.monthController = monthController;
     calendarConfiguration.weekController = weekController;
+    calendarConfiguration.yearController = yearController;
     calendarProvider.weekAndMonthViewChange(showMode);
   }
 

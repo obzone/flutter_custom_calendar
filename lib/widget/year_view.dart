@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_custom_calendar/configuration.dart';
 import 'package:flutter_custom_calendar/flutter_custom_calendar.dart';
 import 'package:flutter_custom_calendar/utils/LogUtil.dart';
 import 'package:flutter_custom_calendar/utils/date_util.dart';
-import 'package:flutter_custom_calendar/widget/month_view.dart';
 import 'package:provider/provider.dart';
 
 /**
@@ -32,14 +30,28 @@ class _YearViewState extends State<YearView> {
   void initState() {
     super.initState();
     extraDataMap = widget.configuration.extraDataMap;
-    items = DateUtil.initCalendarForYearView(widget.year, widget.month, widget.firstDayOfYear.getDateTime(),
-        minSelectDate: widget.configuration.minSelectDate, maxSelectDate: widget.configuration.maxSelectDate, extraDataMap: extraDataMap, offset: widget.configuration.offset);
+    items = DateUtil.initCalendarForYearView(
+      widget.year,
+      widget.month,
+      widget.firstDayOfYear.getDateTime(),
+      minSelectDate: widget.configuration.minSelectDate,
+      maxSelectDate: widget.configuration.maxSelectDate,
+      extraDataMap: extraDataMap,
+      offset: widget.configuration.offset,
+    );
 
     //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
     WidgetsBinding.instance.addPostFrameCallback((callback) {
       Provider.of<CalendarProvider>(context, listen: false).generation.addListener(() async {
-        items = DateUtil.initCalendarForYearView(widget.year, widget.month, widget.firstDayOfYear.getDateTime(),
-            minSelectDate: widget.configuration.minSelectDate, maxSelectDate: widget.configuration.maxSelectDate, extraDataMap: extraDataMap, offset: widget.configuration.offset);
+        items = DateUtil.initCalendarForYearView(
+          widget.year,
+          widget.month,
+          widget.firstDayOfYear.getDateTime(),
+          minSelectDate: widget.configuration.minSelectDate,
+          maxSelectDate: widget.configuration.maxSelectDate,
+          extraDataMap: extraDataMap,
+          offset: widget.configuration.offset,
+        );
         setState(() {});
       });
     });
@@ -167,6 +179,8 @@ class MonthItemContainerState extends State<MonthItemContainer> {
         if (!dateModel.isInRange) {
           return;
         }
+
+        // 点击直接下钻到选中的月份视图
 
         print('244 周视图的变化: $dateModel');
         calendarProvider.lastClickDateModel = dateModel;

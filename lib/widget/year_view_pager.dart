@@ -51,28 +51,28 @@ class _YearViewPagerState extends State<YearViewPager> with AutomaticKeepAliveCl
             return;
           }
 
-          LogUtil.log(TAG: this.runtimeType, message: "YearViewPager PageView onPageChanged,position:$position");
-          DateModel firstDayOfYear = configuration.yearList[position];
-          int currentMonth = firstDayOfYear.month;
+          // LogUtil.log(TAG: this.runtimeType, message: "YearViewPager PageView onPageChanged,position:$position");
+          // DateModel firstDayOfYear = configuration.yearList[position];
+          // int currentMonth = firstDayOfYear.month;
 //          周视图的变化
-          configuration.yearChangeListeners.forEach((listener) {
-            listener(firstDayOfYear.year, firstDayOfYear.month);
-          });
-          if (lastMonth != currentMonth) {
-            LogUtil.log(TAG: this.runtimeType, message: "YearViewPager PageView monthChange:currentMonth:$currentMonth");
-            configuration.monthChangeListeners.forEach((listener) {
-              listener(firstDayOfYear.year, firstDayOfYear.month);
-            });
-            lastMonth = currentMonth;
-            if (calendarProvider.lastClickDateModel == null || calendarProvider.lastClickDateModel.month != currentMonth) {
-              DateModel temp = new DateModel();
-              temp.year = firstDayOfYear.year;
-              temp.month = firstDayOfYear.month;
-              temp.day = firstDayOfYear.day + 14;
-              print('83 周视图的变化: $temp');
-              calendarProvider.lastClickDateModel = temp;
-            }
-          }
+          // configuration.yearChangeListeners.forEach((listener) {
+          //   listener(firstDayOfYear.year, firstDayOfYear.month);
+          // });
+          // if (lastMonth != currentMonth) {
+          //   LogUtil.log(TAG: this.runtimeType, message: "YearViewPager PageView monthChange:currentMonth:$currentMonth");
+          //   configuration.monthChangeListeners.forEach((listener) {
+          //     listener(firstDayOfYear.year, firstDayOfYear.month);
+          //   });
+          //   lastMonth = currentMonth;
+          //   if (calendarProvider.lastClickDateModel == null || calendarProvider.lastClickDateModel.month != currentMonth) {
+          //     DateModel temp = new DateModel();
+          //     temp.year = firstDayOfYear.year;
+          //     temp.month = firstDayOfYear.month;
+          //     temp.day = firstDayOfYear.day + 14;
+          //     print('83 周视图的变化: $temp');
+          //     calendarProvider.lastClickDateModel = temp;
+          //   }
+          // }
 //          calendarProvider.lastClickDateModel = configuration.YearList[position]
 //            ..day += 4;
         },
