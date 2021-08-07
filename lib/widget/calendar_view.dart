@@ -33,6 +33,7 @@ class CalendarViewWidget extends StatefulWidget {
   //自定义日历item
   final DayWidgetBuilder dayWidgetBuilder;
   final WeekBarItemWidgetBuilder weekBarItemWidgetBuilder;
+  final MonthWidgetBuilder monthWidgetBuilder;
 
   //控制器
   final CalendarController calendarController;
@@ -41,6 +42,7 @@ class CalendarViewWidget extends StatefulWidget {
       {Key key,
       this.dayWidgetBuilder = defaultCustomDayWidget,
       this.weekBarItemWidgetBuilder = defaultWeekBarWidget,
+      this.monthWidgetBuilder = defaultCombineMonthWidget,
       @required this.calendarController,
       this.boxDecoration,
       this.padding = EdgeInsets.zero,
@@ -58,13 +60,15 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
   void initState() {
     //初始化一些数据，一些跟状态有关的要放到provider中
     widget.calendarController.calendarProvider.initData(
-        calendarConfiguration: widget.calendarController.calendarConfiguration,
-        padding: widget.padding,
-        margin: widget.margin,
-        itemSize: widget.itemSize,
-        verticalSpacing: widget.verticalSpacing,
-        dayWidgetBuilder: widget.dayWidgetBuilder,
-        weekBarItemWidgetBuilder: widget.weekBarItemWidgetBuilder);
+      calendarConfiguration: widget.calendarController.calendarConfiguration,
+      padding: widget.padding,
+      margin: widget.margin,
+      itemSize: widget.itemSize,
+      verticalSpacing: widget.verticalSpacing,
+      dayWidgetBuilder: widget.dayWidgetBuilder,
+      weekBarItemWidgetBuilder: widget.weekBarItemWidgetBuilder,
+      monthWidgetBuilder: widget.monthWidgetBuilder,
+    );
 
     super.initState();
   }
@@ -115,7 +119,6 @@ class CalendarContainerState extends State<CalendarContainer> with SingleTickerP
   void initState() {
     super.initState();
     calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
-    expand = calendarProvider.expandStatus.value;
 
     if (calendarProvider.calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_ONLY_WEEK) {
       widgets.add(const WeekViewPager());
@@ -160,7 +163,6 @@ class CalendarContainerState extends State<CalendarContainer> with SingleTickerP
       });
     } else if (calendarProvider.calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_MONTH_AND_YEAR) {
       // 月视图和年视图切换
-
       calendarProvider.expandStatus.addListener(() {
         setState(() {
           print("calendarProvider.expandStatus.value:${calendarProvider.expandStatus.value}");

@@ -78,7 +78,7 @@ class _YearViewState extends State<YearView> {
               }
               break;
             case CalendarSelectedMode.singleSelect:
-              if (calendarProvider.selectDateModel.month == dateModel.month) {
+              if (calendarProvider.selectDateModel?.month == dateModel.month) {
                 dateModel.isSelected = true;
               } else {
                 dateModel.isSelected = false;

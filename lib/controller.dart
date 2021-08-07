@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_calendar/widget/default_combine_month_view.dart';
 import 'calendar_provider.dart';
 import 'configuration.dart';
 import 'constants/constants.dart';
@@ -487,6 +488,15 @@ Widget defaultCustomDayWidget(DateModel dateModel) {
  */
 Widget defaultCombineDayWidget(DateModel dateModel) {
   return new DefaultCombineDayWidget(
+    dateModel,
+  );
+}
+
+/**
+ * 使用组合widget的方式构造item
+ */
+Widget defaultCombineMonthWidget(DateModel dateModel) {
+  return new DefaultCombineMonthWidget(
     dateModel,
   );
 }

@@ -150,7 +150,9 @@ class CalendarProvider extends ChangeNotifier {
     }
 
     ///如果第一个页面展示的是月视图，需要计算下初始化的高度
-    if (calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_ONLY_MONTH || calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_MONTH_AND_WEEK) {
+    if (calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_ONLY_MONTH ||
+        calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_MONTH_AND_WEEK ||
+        calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_MONTH_AND_YEAR) {
       int lineCount = DateUtil.getMonthViewLineCount(calendarConfiguration.nowYear, calendarConfiguration.nowMonth, calendarConfiguration.offset);
       totalHeight = calendarConfiguration.itemSize * (lineCount) + calendarConfiguration.verticalSpacing * (lineCount - 1);
     } else {
