@@ -224,6 +224,12 @@ class CalendarController {
     this.calendarConfiguration.monthChangeListeners.add(listener);
   }
 
+  //年份切换监听
+  void addYearChangeListener(OnMonthChange listener) {
+//    this.calendarConfiguration.monthChange = listener;
+    this.calendarConfiguration.yearChangeListeners.add(listener);
+  }
+
   //点击选择监听
   void addOnCalendarSelectListener(OnCalendarSelect listener) {
     this.calendarConfiguration.calendarSelect = listener;
@@ -464,6 +470,7 @@ class CalendarController {
     calendarProvider.clearData();
     calendarConfiguration.weekChangeListeners = null;
     calendarConfiguration.monthChangeListeners = null;
+    calendarConfiguration.yearChangeListeners = null;
   }
 }
 

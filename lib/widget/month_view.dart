@@ -262,7 +262,7 @@ class ItemContainerState extends State<ItemContainer> {
 
             //单选需要刷新上一个item
             if (calendarProvider.lastClickItemState != this) {
-              (calendarProvider.lastClickItemState as ItemContainerState).refreshItem(false);
+              (calendarProvider.lastClickItemState as ItemContainerState)?.refreshItem(false);
               calendarProvider.lastClickItemState = this;
             }
             if (calendarProvider.selectedDateList.contains(dateModel)) {

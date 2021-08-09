@@ -40,24 +40,25 @@ class _YearViewPagerState extends State<YearViewPager> with AutomaticKeepAliveCl
     super.build(context);
     LogUtil.log(TAG: this.runtimeType, message: "YearViewPager build");
 
-    //    获取到当前的CalendarProvider对象,设置listen为false，不需要刷新
+    // 获取到当前的CalendarProvider对象,设置listen为false，不需要刷新
     CalendarProvider calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
     CalendarConfiguration configuration = calendarProvider.calendarConfiguration;
     return Container(
-      height: configuration.itemSize ?? MediaQuery.of(context).size.width / 7,
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      height: (configuration.itemSize ?? MediaQuery.of(context).size.width / 7) * 2 + calendarProvider.calendarConfiguration.verticalSpacing,
       child: PageView.builder(
         onPageChanged: (position) {
           if (calendarProvider.expandStatus.value == true) {
             return;
           }
 
-          // LogUtil.log(TAG: this.runtimeType, message: "YearViewPager PageView onPageChanged,position:$position");
-          // DateModel firstDayOfYear = configuration.yearList[position];
-          // int currentMonth = firstDayOfYear.month;
-//          周视图的变化
-          // configuration.yearChangeListeners.forEach((listener) {
-          //   listener(firstDayOfYear.year, firstDayOfYear.month);
-          // });
+          LogUtil.log(TAG: this.runtimeType, message: "YearViewPager PageView onPageChanged,position:$position");
+          DateModel firstDayOfYear = configuration.yearList[position];
+          // int currentMonth = DayOfYear.month;
+          //  周视图的变化
+          configuration.yearChangeListeners.forEach((listener) {
+            listener(firstDayOfYear.year, firstDayOfYear.month);
+          });
           // if (lastMonth != currentMonth) {
           //   LogUtil.log(TAG: this.runtimeType, message: "YearViewPager PageView monthChange:currentMonth:$currentMonth");
           //   configuration.monthChangeListeners.forEach((listener) {

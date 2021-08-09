@@ -235,8 +235,9 @@ class DateUtil {
     int offset = 0,
   }) {
     List<DateModel> items = List();
+    DateTime currentDate = DateTime.now();
     for (int i = 1; i <= 12; i++) {
-      DateModel dateModel = DateModel.fromDateTime(DateTime(currentDate.year, i, 1));
+      DateModel dateModel = DateModel.fromDateTime(DateTime(year, i, 15));
 
       //判断是否在范围内
       if (dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) && dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
@@ -244,7 +245,7 @@ class DateUtil {
       } else {
         dateModel.isInRange = false;
       }
-      if (month == dateModel.month) {
+      if (currentDate.month == dateModel.month && currentDate.year == dateModel.year) {
         dateModel.isCurrentMonth = true;
       } else {
         dateModel.isCurrentMonth = false;

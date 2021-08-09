@@ -225,7 +225,11 @@ class CalendarContainerState extends State<CalendarContainer> with SingleTickerP
             calendarProvider.calendarConfiguration.weekBarItemWidgetBuilder(),
           AnimatedContainer(
               duration: Duration(milliseconds: 500),
-              height: expand ? totalHeight : itemHeight,
+              height: expand
+                  ? totalHeight
+                  : calendarProvider.calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_MONTH_AND_YEAR
+                      ? itemHeight * 2 + calendarProvider.calendarConfiguration.verticalSpacing
+                      : itemHeight,
               child: IndexedStack(
                 index: index,
                 children: widgets,

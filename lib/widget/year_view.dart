@@ -64,7 +64,7 @@ class _YearViewState extends State<YearView> {
     CalendarConfiguration configuration = calendarProvider.calendarConfiguration;
     return new GridView.builder(
         physics: NeverScrollableScrollPhysics(),
-        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 6, mainAxisSpacing: 10),
+        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 6, mainAxisSpacing: 10, crossAxisSpacing: 10),
         itemCount: 12,
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
@@ -80,6 +80,7 @@ class _YearViewState extends State<YearView> {
             case CalendarSelectedMode.singleSelect:
               if (calendarProvider.selectDateModel?.month == dateModel.month) {
                 dateModel.isSelected = true;
+                print(dateModel);
               } else {
                 dateModel.isSelected = false;
               }
@@ -181,6 +182,11 @@ class MonthItemContainerState extends State<MonthItemContainer> {
         }
 
         // 点击直接下钻到选中的月份视图
+        // 通知月份发生变化
+        calendarProvider.lastClickDateModel = dateModel;
+        calendarProvider.expandStatus.value = !calendarProvider.expandStatus.value;
+
+        return;
 
         print('244 周视图的变化: $dateModel');
         calendarProvider.lastClickDateModel = dateModel;
@@ -195,6 +201,7 @@ class MonthItemContainerState extends State<MonthItemContainer> {
 
         //单选需要刷新上一个item
         if (calendarProvider.lastClickItemState != this) {
+          // 如果取消选中isSelected设置喂false
           (calendarProvider.lastClickItemState as MonthItemContainerState)?.refreshItem(false);
           calendarProvider.lastClickItemState = this;
         }
