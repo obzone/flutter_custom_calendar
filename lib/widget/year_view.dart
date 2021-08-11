@@ -78,7 +78,7 @@ class _YearViewState extends State<YearView> {
               }
               break;
             case CalendarSelectedMode.singleSelect:
-              if (calendarProvider.selectDateModel?.month == dateModel.month) {
+              if (calendarProvider.selectDateModel?.month == dateModel.month && calendarProvider.selectDateModel?.year == dateModel.year) {
                 dateModel.isSelected = true;
                 print(dateModel);
               } else {
@@ -185,6 +185,11 @@ class MonthItemContainerState extends State<MonthItemContainer> {
         // 通知月份发生变化
         calendarProvider.lastClickDateModel = dateModel;
         calendarProvider.expandStatus.value = !calendarProvider.expandStatus.value;
+
+        //月份的变化
+        configuration.monthChangeListeners.forEach((listener) {
+          listener(dateModel.year, dateModel.month);
+        });
 
         return;
 

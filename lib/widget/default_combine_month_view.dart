@@ -62,7 +62,7 @@ class DefaultCombineMonthWidget extends BaseCombineDayWidget {
     return Builder(builder: (BuildContext context) {
       return Container(
         height: Provider.of<CalendarProvider>(context, listen: false).calendarConfiguration.itemSize,
-        color: Colors.red,
+        // color: Colors.red,
         child: new Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -89,38 +89,31 @@ class DefaultCombineMonthWidget extends BaseCombineDayWidget {
 
   @override
   Widget getSelectedWidget(DateModel dateModel) {
-    return Container(
-      foregroundDecoration: new BoxDecoration(border: Border.all(width: 2, color: Colors.blue)),
-      child: new Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          new Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              //公历
-              new Expanded(
-                child: Center(
-                  child: new Text(
-                    dateModel.day.toString(),
-                    style: currentMonthTextStyle,
+    return Builder(builder: (BuildContext context) {
+      return Container(
+        foregroundDecoration: new BoxDecoration(border: Border.all(width: 2, color: Colors.blue)),
+        height: Provider.of<CalendarProvider>(context, listen: false).calendarConfiguration.itemSize,
+        child: new Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            new Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                //公历
+                new Expanded(
+                  child: Center(
+                    child: new Text(
+                      dateModel.day.toString(),
+                      style: currentMonthTextStyle,
+                    ),
                   ),
                 ),
-              ),
-
-              //农历
-              new Expanded(
-                child: Center(
-                  child: new Text(
-                    "${dateModel.lunarString}",
-                    style: lunarTextStyle,
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+              ],
+            )
+          ],
+        ),
+      );
+    });
   }
 }
