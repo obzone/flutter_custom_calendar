@@ -224,7 +224,7 @@ class CalendarContainerState extends State<CalendarContainer> with SingleTickerP
           if (calendarProvider.calendarConfiguration.showMode != CalendarConstants.MODE_SHOW_MONTH_AND_YEAR || calendarProvider.expandStatus.value == true)
             calendarProvider.calendarConfiguration.weekBarItemWidgetBuilder(),
           AnimatedContainer(
-              duration: Duration(milliseconds: 500),
+              duration: Duration(milliseconds: 250),
               height: expand
                   ? totalHeight
                   : calendarProvider.calendarConfiguration.showMode == CalendarConstants.MODE_SHOW_MONTH_AND_YEAR
