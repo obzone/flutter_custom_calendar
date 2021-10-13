@@ -239,16 +239,18 @@ class DateUtil {
     for (int i = 1; i <= 12; i++) {
       DateModel dateModel = DateModel.fromDateTime(DateTime(year, i, 15));
 
-      //判断是否在范围内
-      if (dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) && dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
-        dateModel.isInRange = true;
-      } else {
-        dateModel.isInRange = false;
-      }
+      // 是否当前月
       if (currentDate.month == dateModel.month && currentDate.year == dateModel.year) {
         dateModel.isCurrentMonth = true;
       } else {
         dateModel.isCurrentMonth = false;
+      }
+
+      //判断是否在范围内
+      if (dateModel.isCurrentMonth || dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) && dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
+        dateModel.isInRange = true;
+      } else {
+        dateModel.isInRange = false;
       }
 
       //将自定义额外的数据，存储到相应的model中

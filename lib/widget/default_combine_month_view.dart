@@ -104,7 +104,7 @@ class DefaultCombineMonthWidget extends BaseCombineDayWidget {
                 new Expanded(
                   child: Center(
                     child: new Text(
-                      dateModel.day.toString(),
+                      dateModel.month.toString(),
                       style: currentMonthTextStyle,
                     ),
                   ),

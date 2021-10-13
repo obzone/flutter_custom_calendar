@@ -152,18 +152,6 @@ class MonthItemContainerState extends State<MonthItemContainer> {
     }
   }
 
-  void _notifiCationUnCalendarSelect(DateModel element) {
-    if (configuration.unCalendarSelect != null) {
-      configuration.unCalendarSelect(element);
-    }
-  }
-
-  void _notifiCationCalendarSelect(DateModel element) {
-    if (configuration.calendarSelect != null) {
-      configuration.calendarSelect(element);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
 //    LogUtil.log(TAG: this.runtimeType, message: "ItemContainerState build");
@@ -190,50 +178,6 @@ class MonthItemContainerState extends State<MonthItemContainer> {
         configuration.monthChangeListeners.forEach((listener) {
           listener(dateModel.year, dateModel.month);
         });
-
-        return;
-
-        print('244 周视图的变化: $dateModel');
-        calendarProvider.lastClickDateModel = dateModel;
-
-        /// 加入已经选择了多个 则进行取消操作
-        /// 年视图选中月份之后，下钻到月份视图
-        calendarProvider.selectedDateList.forEach((element) {
-          element.isSelected = false;
-          _notifiCationUnCalendarSelect(element);
-        });
-        calendarProvider.selectedDateList.clear();
-
-        //单选需要刷新上一个item
-        if (calendarProvider.lastClickItemState != this) {
-          // 如果取消选中isSelected设置喂false
-          (calendarProvider.lastClickItemState as MonthItemContainerState)?.refreshItem(false);
-          calendarProvider.lastClickItemState = this;
-        }
-        if (calendarProvider.selectedDateList.contains(dateModel)) {
-          // 如果已经选择就执行取消
-          _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
-          dateModel.isSelected = false;
-          calendarProvider.selectedDateList.clear();
-          calendarProvider.selectDateModel = null;
-          _notifiCationUnCalendarSelect(dateModel);
-        } else {
-          _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
-          dateModel.isSelected = true;
-          calendarProvider.selectDateModel = dateModel;
-          _notifiCationCalendarSelect(dateModel);
-        }
-
-        setState(() {});
-
-        /// 所有数组操作完了 进行通知分发
-        if (configuration.calendarSelect != null && calendarProvider.selectedDateList.length > 0) {
-          calendarProvider.selectedDateList.forEach((element) {
-            _notifiCationCalendarSelect(element);
-          });
-        }
-
-        refreshItem(!this.dateModel.isSelected);
       },
       child: configuration.monthWidgetBuilder(dateModel),
     );
