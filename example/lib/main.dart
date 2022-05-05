@@ -45,10 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
     controller = new CalendarController(
         minYear: 2019,
         minYearMonth: 1,
-        maxYear: 2021,
+        maxYear: 2023,
         maxYearMonth: 12,
         showMode: CalendarConstants.MODE_SHOW_MONTH_AND_YEAR,
         selectedDateTimeList: _selectedDate,
+        selectDateModel: DateModel.fromDateTime(DateTime(2019, 5, 1)),
         selectMode: CalendarSelectedMode.singleSelect)
       ..addOnCalendarSelectListener((dateModel) {
         _selectedModels.add(dateModel);
