@@ -11,6 +11,8 @@ class CacheData {
 
   static CacheData get instance => _instance;
 
+  Map<DateModel, List<DateModel>> yearListCache = Map();
+
   Map<DateModel, List<DateModel>> monthListCache = Map();
 
   Map<DateModel, List<DateModel>> weekListCache = Map();
@@ -25,5 +27,6 @@ class CacheData {
   void clearData() {
     monthListCache.clear();
     weekListCache.clear();
+    yearListCache.clear();
   }
 }

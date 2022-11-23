@@ -10,8 +10,7 @@ class DateUtil {
    * 判断一个日期是否是周末，即周六日
    */
   static bool isWeekend(DateTime dateTime) {
-    return dateTime.weekday == DateTime.saturday ||
-        dateTime.weekday == DateTime.sunday;
+    return dateTime.weekday == DateTime.saturday || dateTime.weekday == DateTime.sunday;
   }
 
   /**
@@ -34,13 +33,7 @@ class DateUtil {
   static int getMonthDaysCount(int year, int month) {
     int count = 0;
     //判断大月份
-    if (month == 1 ||
-        month == 3 ||
-        month == 5 ||
-        month == 7 ||
-        month == 8 ||
-        month == 10 ||
-        month == 12) {
+    if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
       count = 31;
     }
 
@@ -108,24 +101,16 @@ class DateUtil {
     return week;
   }
 
-  static List<DateModel> initCalendarForMonthView(
-      int year, int month, DateTime currentDate, int weekStart,
-      {DateModel minSelectDate,
-      DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap,
-      int offset = 0}) {
+  static List<DateModel> initCalendarForMonthView(int year, int month, DateTime currentDate, int weekStart,
+      {DateModel minSelectDate, DateModel maxSelectDate, Map<DateModel, Object> extraDataMap, int offset = 0}) {
     print('initCalendarForMonthView start');
     weekStart = DateTime.monday;
     //获取月视图真实偏移量
-    int mPreDiff =
-        getIndexOfFirstDayInMonth(new DateTime(year, month), offset: offset);
+    int mPreDiff = getIndexOfFirstDayInMonth(new DateTime(year, month), offset: offset);
     //获取该月的天数
     int monthDayCount = getMonthDaysCount(year, month);
 
-    LogUtil.log(
-        TAG: "DateUtil",
-        message:
-            "initCalendarForMonthView:$year年$month月,有$monthDayCount天,第一天的index为${mPreDiff}");
+    LogUtil.log(TAG: "DateUtil", message: "initCalendarForMonthView:$year年$month月,有$monthDayCount天,第一天的index为${mPreDiff}");
 
     List<DateModel> result = new List();
 
@@ -149,8 +134,7 @@ class DateUtil {
         dateModel.isCurrentMonth = false;
       } else if (i >= monthDayCount + (mPreDiff - 1)) {
         //这是下一月的几天
-        temp = lastDayOfMonth
-            .add(Duration(days: i - mPreDiff - monthDayCount + 2));
+        temp = lastDayOfMonth.add(Duration(days: i - mPreDiff - monthDayCount + 2));
         dateModel = DateModel.fromDateTime(temp);
         dateModel.isCurrentMonth = false;
       } else {
@@ -161,8 +145,7 @@ class DateUtil {
       }
 
       //判断是否在范围内
-      if (dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) &&
-          dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
+      if (dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) && dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
         dateModel.isInRange = true;
       } else {
         dateModel.isInRange = false;
@@ -195,9 +178,7 @@ class DateUtil {
 
     int preIndex = (firstDayOfMonth.weekday - 1 + offset) % 7;
     int lineCount = ((preIndex + monthDayCount) / 7).ceil();
-    LogUtil.log(
-        TAG: "DateUtil",
-        message: "getMonthViewLineCount:$year年$month月:有$lineCount行");
+    LogUtil.log(TAG: "DateUtil", message: "getMonthViewLineCount:$year年$month月:有$lineCount行");
 
     return lineCount;
   }
@@ -205,12 +186,8 @@ class DateUtil {
   /**
    * 获取本周的7个item
    */
-  static List<DateModel> initCalendarForWeekView(
-      int year, int month, DateTime currentDate, int weekStart,
-      {DateModel minSelectDate,
-      DateModel maxSelectDate,
-      Map<DateModel, Object> extraDataMap,
-      int offset = 0}) {
+  static List<DateModel> initCalendarForWeekView(int year, int month, DateTime currentDate, int weekStart,
+      {DateModel minSelectDate, DateModel maxSelectDate, Map<DateModel, Object> extraDataMap, int offset = 0}) {
     List<DateModel> items = List();
 
     int weekDay = currentDate.weekday + offset;
@@ -219,12 +196,10 @@ class DateUtil {
     DateTime firstDayOfWeek = currentDate.add(Duration(days: -weekDay));
 
     for (int i = 1; i <= 7; i++) {
-      DateModel dateModel =
-          DateModel.fromDateTime(firstDayOfWeek.add(Duration(days: i)));
+      DateModel dateModel = DateModel.fromDateTime(firstDayOfWeek.add(Duration(days: i)));
 
       //判断是否在范围内
-      if (dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) &&
-          dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
+      if (dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) && dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
         dateModel.isInRange = true;
       } else {
         dateModel.isInRange = false;
@@ -242,6 +217,48 @@ class DateUtil {
         }
       }
 
+      items.add(dateModel);
+    }
+    return items;
+  }
+
+/**
+ * 初始化年视图日历数据
+ */
+  static List<DateModel> initCalendarForYearView(
+    int year,
+    int month,
+    DateTime currentDate, {
+    DateModel minSelectDate,
+    DateModel maxSelectDate,
+    Map<DateModel, Object> extraDataMap,
+    int offset = 0,
+  }) {
+    List<DateModel> items = List();
+    DateTime currentDate = DateTime.now();
+    for (int i = 1; i <= 12; i++) {
+      DateModel dateModel = DateModel.fromDateTime(DateTime(year, i, 15));
+
+      // 是否当前月
+      if (currentDate.month == dateModel.month && currentDate.year == dateModel.year) {
+        dateModel.isCurrentMonth = true;
+      } else {
+        dateModel.isCurrentMonth = false;
+      }
+
+      //判断是否在范围内
+      if (dateModel.isCurrentMonth || dateModel.getDateTime().isAfter(minSelectDate.getDateTime()) && dateModel.getDateTime().isBefore(maxSelectDate.getDateTime())) {
+        dateModel.isInRange = true;
+      } else {
+        dateModel.isInRange = false;
+      }
+
+      //将自定义额外的数据，存储到相应的model中
+      if (extraDataMap?.isNotEmpty == true) {
+        if (extraDataMap.containsKey(dateModel)) {
+          dateModel.extraData = extraDataMap[dateModel];
+        }
+      }
       items.add(dateModel);
     }
     return items;

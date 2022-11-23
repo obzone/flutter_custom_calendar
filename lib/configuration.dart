@@ -58,6 +58,7 @@ class CalendarConfiguration {
   //支持自定义绘制
   DayWidgetBuilder dayWidgetBuilder; //创建日历item
   WeekBarItemWidgetBuilder weekBarItemWidgetBuilder; //创建顶部的weekbar
+  MonthWidgetBuilder monthWidgetBuilder; // 创建日历的月item
 
   /**
    * 监听变化
@@ -69,18 +70,19 @@ class CalendarConfiguration {
   OnMultiSelectOutOfRange multiSelectOutOfRange; //多选超出指定范围
   OnMultiSelectOutOfSize multiSelectOutOfSize; //多选超出限制个数
 
-  ObserverList<OnMonthChange> monthChangeListeners =
-      ObserverList<OnMonthChange>(); //保存多个月份监听的事件
-  ObserverList<OnWeekChange> weekChangeListeners =
-      ObserverList<OnWeekChange>(); //周视图切换
+  ObserverList<OnMonthChange> monthChangeListeners = ObserverList<OnMonthChange>(); //保存多个月份监听的事件
+  ObserverList<OnWeekChange> weekChangeListeners = ObserverList<OnWeekChange>(); //周视图切换
+  ObserverList<OnYearChange> yearChangeListeners = ObserverList<OnYearChange>(); //年视图切换
 
   /**
    * 下面的信息不是配置的，是根据配置信息进行计算出来的
    */
   List<DateModel> monthList = new List(); //月份list
   List<DateModel> weekList = new List(); //星期list
+  List<DateModel> yearList = new List(); //年list
   PageController monthController; //月份的controller
   PageController weekController; //星期的controller
+  PageController yearController; //年的controller
   DateModel minSelectDate;
   DateModel maxSelectDate;
 

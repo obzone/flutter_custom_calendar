@@ -29,8 +29,7 @@ class MonthView extends StatefulWidget {
   _MonthViewState createState() => _MonthViewState();
 }
 
-class _MonthViewState extends State<MonthView>
-    with AutomaticKeepAliveClientMixin {
+class _MonthViewState extends State<MonthView> with AutomaticKeepAliveClientMixin {
   List<DateModel> items = List();
 
   int lineCount;
@@ -40,10 +39,8 @@ class _MonthViewState extends State<MonthView>
   void initState() {
     super.initState();
     extraDataMap = widget.configuration.extraDataMap;
-    DateModel firstDayOfMonth =
-        DateModel.fromDateTime(DateTime(widget.year, widget.month, 1));
-    if (CacheData.getInstance().monthListCache[firstDayOfMonth]?.isNotEmpty ==
-        true) {
+    DateModel firstDayOfMonth = DateModel.fromDateTime(DateTime(widget.year, widget.month, 1));
+    if (CacheData.getInstance().monthListCache[firstDayOfMonth]?.isNotEmpty == true) {
       LogUtil.log(TAG: this.runtimeType, message: "缓存中有数据");
       items = CacheData.getInstance().monthListCache[firstDayOfMonth];
     } else {
@@ -53,14 +50,11 @@ class _MonthViewState extends State<MonthView>
       });
     }
 
-    lineCount = DateUtil.getMonthViewLineCount(
-        widget.year, widget.month, widget.configuration.offset);
+    lineCount = DateUtil.getMonthViewLineCount(widget.year, widget.month, widget.configuration.offset);
 
     //第一帧后,添加监听，generation发生变化后，需要刷新整个日历
     WidgetsBinding.instance.addPostFrameCallback((callback) {
-      Provider.of<CalendarProvider>(context, listen: false)
-          .generation
-          .addListener(() async {
+      Provider.of<CalendarProvider>(context, listen: false).generation.addListener(() async {
         extraDataMap = widget.configuration.extraDataMap;
         await getItems();
       });
@@ -80,12 +74,8 @@ class _MonthViewState extends State<MonthView>
   }
 
   static Future<List<DateModel>> initCalendarForMonthView(Map map) async {
-    return DateUtil.initCalendarForMonthView(
-        map['year'], map['month'], DateTime.now(), DateTime.sunday,
-        minSelectDate: map['minSelectDate'],
-        maxSelectDate: map['maxSelectDate'],
-        extraDataMap: map['extraDataMap'],
-        offset: map['offset']);
+    return DateUtil.initCalendarForMonthView(map['year'], map['month'], DateTime.now(), DateTime.sunday,
+        minSelectDate: map['minSelectDate'], maxSelectDate: map['maxSelectDate'], extraDataMap: map['extraDataMap'], offset: map['offset']);
   }
 
   @override
@@ -93,17 +83,14 @@ class _MonthViewState extends State<MonthView>
     super.build(context);
     LogUtil.log(TAG: this.runtimeType, message: "_MonthViewState build");
 
-    CalendarProvider calendarProvider =
-        Provider.of<CalendarProvider>(context, listen: false);
-    CalendarConfiguration configuration =
-        calendarProvider.calendarConfiguration;
+    CalendarProvider calendarProvider = Provider.of<CalendarProvider>(context, listen: false);
+    CalendarConfiguration configuration = calendarProvider.calendarConfiguration;
 
     return new GridView.builder(
         addAutomaticKeepAlives: true,
         padding: EdgeInsets.zero,
         physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7, mainAxisSpacing: configuration.verticalSpacing),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7, mainAxisSpacing: configuration.verticalSpacing),
         itemCount: items.isEmpty ? 0 : items.length,
         itemBuilder: (context, index) {
           DateModel dateModel = items[index];
@@ -165,8 +152,7 @@ class ItemContainer extends StatefulWidget {
   final DateModel dateModel;
 
   final GestureTapCallback clickCall;
-  const ItemContainer({Key key, this.dateModel, this.clickCall})
-      : super(key: key);
+  const ItemContainer({Key key, this.dateModel, this.clickCall}) : super(key: key);
 
   @override
   ItemContainerState createState() => ItemContainerState();
@@ -229,9 +215,7 @@ class ItemContainerState extends State<ItemContainer> {
       //点击整个item都会触发事件
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        LogUtil.log(
-            TAG: this.runtimeType,
-            message: "GestureDetector onTap: $dateModel}");
+        LogUtil.log(TAG: this.runtimeType, message: "GestureDetector onTap: $dateModel}");
 
         //范围外不可点击
         if (!dateModel.isInRange) {
@@ -252,8 +236,7 @@ class ItemContainerState extends State<ItemContainer> {
               _notifiCationUnCalendarSelect(dateModel);
             } else {
               //多选，判断是否超过限制，超过范围
-              if (calendarProvider.selectedDateList.length ==
-                  configuration.maxMultiSelectCount) {
+              if (calendarProvider.selectedDateList.length == configuration.maxMultiSelectCount) {
                 if (configuration.multiSelectOutOfSize != null) {
                   configuration.multiSelectOutOfSize();
                 }
@@ -279,17 +262,17 @@ class ItemContainerState extends State<ItemContainer> {
 
             //单选需要刷新上一个item
             if (calendarProvider.lastClickItemState != this) {
-              calendarProvider.lastClickItemState?.refreshItem(false);
+              (calendarProvider.lastClickItemState as ItemContainerState)?.refreshItem(false);
               calendarProvider.lastClickItemState = this;
             }
-            if(calendarProvider.selectedDateList.contains(dateModel)){
+            if (calendarProvider.selectedDateList.contains(dateModel)) {
               // 如果已经选择就执行取消
               _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
               dateModel.isSelected = false;
               calendarProvider.selectedDateList.clear();
               calendarProvider.selectDateModel = null;
               _notifiCationUnCalendarSelect(dateModel);
-            }else{
+            } else {
               _notifiCationUnCalendarSelect(calendarProvider.selectDateModel);
               dateModel.isSelected = true;
               calendarProvider.selectDateModel = dateModel;
@@ -322,8 +305,7 @@ class ItemContainerState extends State<ItemContainer> {
                 t2 = dateModel.getDateTime();
               }
               for (; t1.isBefore(t2);) {
-                calendarProvider.selectedDateList
-                    .add(DateModel.fromDateTime(t1));
+                calendarProvider.selectedDateList.add(DateModel.fromDateTime(t1));
                 t1 = t1.add(Duration(days: 1));
               }
               calendarProvider.selectedDateList.add(DateModel.fromDateTime(t1));
@@ -343,8 +325,7 @@ class ItemContainerState extends State<ItemContainer> {
         }
 
         /// 所有数组操作完了 进行通知分发
-        if (configuration.calendarSelect != null &&
-            calendarProvider.selectedDateList.length > 0) {
+        if (configuration.calendarSelect != null && calendarProvider.selectedDateList.length > 0) {
           calendarProvider.selectedDateList.forEach((element) {
             _notifiCationCalendarSelect(element);
           });

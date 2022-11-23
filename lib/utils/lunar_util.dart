@@ -862,12 +862,7 @@ class LunarUtil {
   static int solarToInt(int y, int m, int d) {
     m = (m + 9) % 12;
     y = y - (m / 10).toInt();
-    return (365 * y +
-        (y / 4).toInt() -
-        (y / 100).toInt() +
-        (y / 400).toInt() +
-        ((m * 306 + 5) / 10).toInt() +
-        (d - 1));
+    return (365 * y + (y / 4).toInt() - (y / 100).toInt() + (y / 400).toInt() + ((m * 306 + 5) / 10).toInt() + (d - 1));
   }
 
   /**
@@ -924,8 +919,7 @@ class LunarUtil {
   }
 
   static String getString(int month, int day) {
-    return (month >= 10 ? month.toString() : "0$month") +
-        (day >= 10 ? day.toString() : "0$day");
+    return (month >= 10 ? month.toString() : "0$month") + (day >= 10 ? day.toString() : "0$day");
   }
 
   /**
@@ -1024,42 +1018,22 @@ class LunarUtil {
     List<String> festivals = new List(3);
     DateTime dateTime = new DateTime(year, 5, 1);
 
-    //母亲节
-    int week = (dateTime.weekday + 1) % 8;
-    int startDiff = 7 - week + 1;
-    if (startDiff == 7) {
-      festivals[0] =
-          dateToString(year, 5, startDiff + 1) + SPECIAL_FESTIVAL_STR[0];
-    } else {
-      festivals[0] =
-          dateToString(year, 5, startDiff + 7 + 1) + SPECIAL_FESTIVAL_STR[0];
-    }
+    //母亲节 5月的第二个周日
+    int startDiff = 7 - dateTime.weekday + 1; // 5月1日所在的周在5月一共有几天
+    festivals[0] = dateToString(year, 5, startDiff + 7) + SPECIAL_FESTIVAL_STR[0]; // 5月1号所在周的在5月剩余天数 + 一周(7天)，那天就是母亲节
 
-    //父亲节
+    //父亲节 6月的第三周日
     dateTime = new DateTime(year, 6, 1);
 
-    week = (dateTime.weekday + 1) % 8;
-    startDiff = 7 - week + 1;
-    if (startDiff == 7) {
-      festivals[1] =
-          dateToString(year, 6, startDiff + 7 + 1) + SPECIAL_FESTIVAL_STR[1];
-    } else {
-      festivals[1] = dateToString(year, 6, startDiff + 7 + 7 + 1) +
-          SPECIAL_FESTIVAL_STR[1];
-    }
+    startDiff = 7 - dateTime.weekday + 1; // 6月1日所在的周在6月一共有几天
+    festivals[1] = dateToString(year, 6, startDiff + 7 + 7 + 1) + SPECIAL_FESTIVAL_STR[1]; // 6月1号所在周在6月剩余天数 + 一周(14天)，那天就是父亲节
 
-    //感恩节
+    //感恩节 11月第四个星期四
     dateTime = new DateTime(year, 11, 1);
-    week = (dateTime.weekday + 1) % 8;
 
-    startDiff = 7 - week + 1;
-    if (startDiff <= 2) {
-      festivals[2] =
-          dateToString(year, 11, startDiff + 21 + 5) + SPECIAL_FESTIVAL_STR[2];
-    } else {
-      festivals[2] =
-          dateToString(year, 11, startDiff + 14 + 5) + SPECIAL_FESTIVAL_STR[2];
-    }
+    startDiff = 7 - dateTime.weekday + 1; // 11月1日所在的周在11月一共有几天
+    festivals[2] = dateToString(year, 11, startDiff + 14 + 5) + SPECIAL_FESTIVAL_STR[2]; // 11月1号所在周在11月剩余天数 + 2周 + 5天，那天就是感恩节
+
     return festivals;
   }
 
